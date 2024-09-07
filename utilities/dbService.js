@@ -13,6 +13,16 @@ const updateManyRecords = async (modelName, query, data, options = {}) => {
   return await collections[modelName].updateMany(query, data, options);
 };
 
+const deleteOneRecord = async (modelName, query) => {
+  try {
+    const result = await collections[modelName].deleteOne(query);
+    return result;
+  } catch (error) {
+    console.error('Error deleting record:', error);
+    throw error;
+  }
+};
+
 const findOneRecord = async (modelName, query, options = {}) => {
   return await collections[modelName].findOne(query, options);
 };
@@ -126,6 +136,7 @@ module.exports = {
   updateManyRecords,
   createManyRecords,
   createOneRecord,
+  deleteOneRecord,
   findRecordWithFilterFn,
   findManyRecordsWithPagination,
   findDistinctKey,

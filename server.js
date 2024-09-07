@@ -33,6 +33,9 @@ app.use(
   })
 );
 
+// Serve static images
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
 app.use(logger("dev"));
 
 app.use(
@@ -48,6 +51,8 @@ app.use(
     extended: true,
   })
 );
+
+
 
 // app.use(express.static("public"));
 app.use(express.static(path.join(__dirname, "public")));
@@ -73,6 +78,9 @@ app.use((err, req, res, next) => {
     next(err);
   }
 });
+
+
+
 
 process.on("uncaughtException", (err) => {
   console.log(`Uncaught Exception: ${err.message}`);
