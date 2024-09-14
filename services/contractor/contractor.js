@@ -1,6 +1,6 @@
 /**
  * This is for Contain function layer for contractor service.
- * @author Sandip Vaghasiya
+ * @author Manthan Vaghasiya
  *
  */
 
@@ -272,9 +272,17 @@ const updateCategory = async (req, res) => {
 /*************************** AddProduct ***************************/
 const AddProduct = async (req, res) => {
   // console.log("AddProduct", req.body);
-  const { productName, selectedCategory, price, mrp,selectedCategoryId } = req.body;
+  const { productName, selectedCategory, price, mrp, selectedCategoryId } =
+    req.body;
   const image = req.file;
-  if (!productName || !selectedCategory || !price || !mrp || !image || !selectedCategoryId) {
+  if (
+    !productName ||
+    !selectedCategory ||
+    !price ||
+    !mrp ||
+    !image ||
+    !selectedCategoryId
+  ) {
     return {
       message: "required All fields",
     };
@@ -284,7 +292,7 @@ const AddProduct = async (req, res) => {
     const data = {
       productName: productName,
       categoryName: selectedCategory,
-      categoryid:selectedCategoryId,
+      categoryid: selectedCategoryId,
       price: price,
       mrp: mrp,
       imageName: image.originalname,
@@ -342,9 +350,8 @@ const getProduct = async (req) => {
 
 /*************************** categoryDelete ***************************/
 const productDelete = async (req, res) => {
-  console.log("productDelete",req.body);
+  console.log("productDelete", req.body);
   try {
-
     let { productId } = req.body;
 
     // Ensure that product is provided
@@ -385,17 +392,20 @@ const AddOurCulture = async (req) => {
       const imageRecord = {
         imageName: image.originalname,
       };
-      let result = await dbService.createOneRecord("ourCultureModel", imageRecord);
+      let result = await dbService.createOneRecord(
+        "ourCultureModel",
+        imageRecord
+      );
 
       imageRecords.push(result);
     }
 
     console.log("Saved image records:", imageRecords);
 
-    return { message: 'Images uploaded successfully!', data: imageRecords };
+    return { message: "Images uploaded successfully!", data: imageRecords };
   } catch (error) {
     console.error("Error in AddOurCulture:", error);
-    throw new Error('Failed to upload images.');
+    throw new Error("Failed to upload images.");
   }
 };
 
@@ -432,9 +442,8 @@ const getOurCulture = async (req) => {
 
 /*************************** ourCultureDelete ***************************/
 const ourCultureDelete = async (req, res) => {
-  console.log("ourCultureDelete",req.body);
+  console.log("ourCultureDelete", req.body);
   try {
-
     let { ourCultureId } = req.body;
 
     // Ensure that product is provided
@@ -537,9 +546,8 @@ const getBlog = async (req) => {
 
 /*************************** blogDelete ***************************/
 const blogDelete = async (req, res) => {
-  console.log("productDelete",req.body);
+  console.log("productDelete", req.body);
   try {
-
     let { blogId } = req.body;
 
     if (!blogId) {
@@ -568,44 +576,169 @@ const blogDelete = async (req, res) => {
   }
 };
 
-/*************************** AddBlog ***************************/
+/*************************** AddAboutUs ***************************/
 const AddAboutUs = async (req) => {
-  const { Content } = req.body;
-  const image = req.file;
+  const { content } = req.body;  // Content from the request body
+  const image = req.file;        // Image file from the request
 
-  // Check if all required fields are present
-  if (!Category || !Content || !image || !Title) {
+  // Validate that both content and image are provided
+  if (!content || !image) {
     return {
-      message: "All fields are required",
+      success: false,
+      message: "All fields are required",  // Error message if fields are missing
     };
   }
 
   try {
+    // Data to be saved
     const data = {
-      Content: Content,
-      imageName: image.originalname,
+      content: content,
+      imageName: image.filename,  // Using the modified filename
     };
 
-    const addProductData = await dbService.createOneRecord("aboutusModel", data);
+    // Save the data to the database (adjust your model as necessary)
+    const addAboutUsData = await dbService.createOneRecord("aboutusModel", data);
 
-    if (addProductData) {
+    if (addAboutUsData) {
       return {
-        message: "aboutus added successfully",
+        success: true,
+        message: "About Us added successfully",  // Success message
       };
     } else {
       return {
-        message: "aboutus not added",
+        success: false,
+        message: "Failed to add About Us",  // Failure message
       };
     }
   } catch (error) {
-    console.error("Error adding aboutus:", error);
+    console.error("Error adding About Us:", error);
     return {
-      message: "An error occurred while adding the aboutus",
+      success: false,
+      message: "An error occurred while adding the About Us section",
     };
   }
 };
 
+/*************************** getDetails ***************************/
+const getDetails = async (req) => {
+  try {
+    console.log("aboutus", req.body);
 
+    let where = {
+      isDeleted: false,
+    };
+
+    let blogdata = await dbService.findAllRecords("blogModel", where);
+    let categorydata = await dbService.findAllRecords("CategoryModel", where);
+    let productdata = await dbService.findAllRecords("ProductModel", where);
+    let ourclutyre = await dbService.findAllRecords("ourCultureModel", where);
+
+    if (blogdata && categorydata && productdata && ourclutyre) {
+      return {
+        message: "Details fetched successfully",
+        blog: blogdata.length,
+        category: categorydata.length,
+        product: productdata.length,
+        culture: ourclutyre.length 
+      };
+    } else {
+      return {
+        message: "Details not found"
+      };
+    }
+  } catch (error) {
+    console.error("Error fetching details:", error);
+    return {
+      message: "Error fetching details",
+      error: error.message
+    };
+  }
+};
+
+/*************************** getAboutus ***************************/
+const getAboutus = async (req) => {
+  let where = {
+    isDeleted: false,
+  };
+
+  try {
+    let data = await dbService.findAllRecords("aboutusModel", where);
+
+    if (data.length > 0) {  // Check if there are records found
+      return {
+        success: true,
+        message: "About us details fetched successfully",
+        data: data
+      };
+    } else {
+      return {
+        success: false,
+        message: "No About Us records found or all records are deleted.",
+      };
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error("Error fetching About Us details:", error);
+
+    return {
+      success: false,
+      message: "An error occurred while fetching About Us details.",
+    };
+  }
+}
+
+/*************************** updateBlog ***************************/
+const updateBlog = async (req, res) => {
+  const { content } = req.body;
+  const categoryId = req.body.categoryId;
+  if (!categoryId) {
+    return {
+      message: "Category ID is required",
+    };
+  }
+
+  try {
+    const category = await dbService.findOneRecord("CategoryModel", {
+      _id: categoryId,
+    });
+    if (!category) {
+      return {
+        message: "Category not found",
+      };
+    }
+
+    // Determine image name
+    let imageName = category.imageName; // Default to existing image
+    if (req.file) {
+      imageName = req.file.originalname; // Use new image if provided
+    }
+
+    const updateData = {
+      categoryName,
+      comingSoon,
+      imageName,
+    };
+    // console.log("imageName:", imageName, ", updateData:", updateData);
+    const updatedCategory = await dbService.findOneAndUpdateRecord(
+      "CategoryModel",
+      { _id: categoryId },
+      updateData,
+      { new: true }
+    );
+
+    if (updatedCategory) {
+      return {
+        message: "category Update successfully",
+      };
+    } else {
+      return {
+        message: "category Not Update successfully",
+      };
+    }
+  } catch (error) {
+    console.error("Error updating category:", error);
+  }
+};
 
 
 module.exports = {
@@ -624,5 +757,7 @@ module.exports = {
   AddBlog,
   getBlog,
   blogDelete,
-  AddAboutUs
+  AddAboutUs,
+  getDetails,
+  getAboutus
 };

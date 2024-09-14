@@ -1,7 +1,7 @@
 /*
  * @file: app.js
  * @description: It Contain server setup functions.
- * @author: Sandip Vaghasiya
+ * @author: Manthan Vaghasiya
  */
 
 // pCeG3775LXCQZlsp
@@ -12,6 +12,8 @@ const cors = require("cors");
 const path = require("path");
 const swaggerUi = require("swagger-ui-express");
 const logger = require("morgan");
+const https = require("https");
+const fs = require("fs");
 const db = require("./db/index");
 const swaggerJsDocsWeb = require("./config/swagger/swagger-config-web");
 const { failAction } = require("./utilities/response");
@@ -52,9 +54,6 @@ app.use(
   })
 );
 
-
-
-// app.use(express.static("public"));
 app.use(express.static(path.join(__dirname, "public")));
 var options = {};
 
@@ -79,9 +78,6 @@ app.use((err, req, res, next) => {
   }
 });
 
-
-
-
 process.on("uncaughtException", (err) => {
   console.log(`Uncaught Exception: ${err.message}`);
   process.exit(1);
@@ -100,8 +96,9 @@ app.get("/test", (req, res) =>
   res.send("<h2>Hello Admin <br> How Are You ?</h2>")
 );
 
-app.listen(port, function () {
-  console.log(
-    `Express server listening on port ${port} and worker ${process.pid}`
-  );
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
+
+

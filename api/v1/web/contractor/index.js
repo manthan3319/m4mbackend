@@ -1,7 +1,7 @@
 /*
  * @file: index.js
  * @description: It's combine all contractor routers.
- * @author: Sandip Vaghasiya
+ * @author: Manthan Vaghasiya
  */
 
 const save = require("./save");
@@ -24,8 +24,12 @@ const AddBlog = require("./AddBlog");
 const getBlog = require("./getBlog");
 const blogDelete = require("./blogDelete");
 const AddAboutUs = require("./AddAboutUs");
+const getDetails = require("./getDetails");
+const getAboutus = require("./getAboutus");
+const updateBlog = require("./updateBlog");
 
 module.exports = [
+  updateBlog,
   save,
   list,
   edit,
@@ -45,5 +49,7 @@ module.exports = [
   AddBlog,
   getBlog,
   blogDelete,
-  AddAboutUs
+  AddAboutUs,
+  getDetails,
+  getAboutus
 ];

@@ -1,7 +1,7 @@
 /*
  * @file: index.js
  * @description: It's combine all routers.
- * @author: Sandip Vaghasiya
+ * @author: Manthan Vaghasiya
  */
 
 // Please assign all url here related WEB api's

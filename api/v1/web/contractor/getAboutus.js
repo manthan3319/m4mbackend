@@ -7,12 +7,12 @@
 const { Joi } = require("../../../../utilities/schemaValidate");
 const { Router } = require("express");
 const commonResolver = require("../../../../utilities/commonResolver");
-const { categoryDelete } = require("../../../../services/contractor/contractor");
+const { getAboutus } = require("../../../../services/contractor/contractor");
 const router = new Router();
 
 /**
  * @swagger
- * /api/v1/Contractor/categoryDelete:
+ * /api/v1/Contractor/getAboutus:
  *  post:
  *   tags: ["Contractor"]
  *   summary: Save Contractor information.
@@ -24,8 +24,6 @@ const router = new Router();
  *        schema:
  *         type: object
  *         properties:
- *           categoryId:
- *             type: string
  *   responses:
  *    "200":
  *     description: success
@@ -33,15 +31,12 @@ const router = new Router();
  *     description: fail
  */
 
-const dataSchema = Joi.object({
-  categoryId: Joi.string().required().label("categoryId"),
-});
+
 
 router.post(
-  "/categoryDelete",
+  "/getAboutus",
   commonResolver.bind({
-    modelService: categoryDelete,
-    schemaValidate: dataSchema,
+    modelService: getAboutus,
   })
 );
 

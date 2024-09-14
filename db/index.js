@@ -1,7 +1,7 @@
 /*
  * @file: index.js
  * @description: It Contain db setup function.
- * @author: Sandip Vaghasiya
+ * @author: Manthan Vaghasiya
  */
 require("dotenv").config({ path: ".env" });
 const mongoose = require("mongoose");

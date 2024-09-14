@@ -1,6 +1,6 @@
 /**
  * This is the indexer for contractor model
- * @author Sandip Vaghasiya
+ * @author Manthan Vaghasiya
  * @since Saturday, May 28, 2022
  */
 

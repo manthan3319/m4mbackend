@@ -1,7 +1,7 @@
 /*
  * @file: index.js
  * @description: It's combine all routers.
- * @author: Sandip Vaghasiya
+ * @author: Manthan Vaghasiya
  */
 const { Router } = require("express");
 const app = Router();

@@ -1,6 +1,6 @@
 /**
  * This is the indexer for contractor model
- * @author Sandip Vaghasiya
+ * @author Manthan Vaghasiya
  * @since Saturday, May 28, 2022
  */
 
@@ -9,7 +9,7 @@ const mongoose = require("mongoose");
 const contractorSchema = new mongoose.Schema({
   Category: { type: String },
   Title: { type: String },
-  Content: { type: String },
+  content: { type: String },
   productName: { type: String },
   imageName: { type: String },
   price: { type: String },

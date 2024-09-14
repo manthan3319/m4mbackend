@@ -2,9 +2,8 @@ const { Router } = require("express");
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { AddAboutUs } = require("../../../../services/contractor/contractor");
+const { updateBlog } = require("../../../../services/contractor/contractor");
 const router = new Router();
-
 // Configure Multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -20,11 +19,12 @@ const storage = multer.diskStorage({
   }
 });
 
+
 const upload = multer({ storage: storage });
 
 /**
  * @swagger
- * /api/v1/Contractor/AddAboutUs:
+ * /api/v1/Contractor/updateBlog:
  *  post:
  *   tags: ["Contractor"]
  *   summary: Save Category information.
@@ -32,7 +32,7 @@ const upload = multer({ storage: storage });
  *   parameters:
  *      - in: formData
  *        name: content
- *        description: Content.
+ *        description: content.
  *        type: string
  *      - in: formData
  *        name: image
@@ -40,26 +40,27 @@ const upload = multer({ storage: storage });
  *        type: file
  *   responses:
  *    "200":
- *     description: Success
+ *     description: success
  *    "400":
- *     description: Fail
+ *     description: fail
  */
 
 router.post(
-  "/AddAboutUs",
-  upload.single('image'),
+  "/updateBlog",
+  upload.single('image'), // Ensure this is used for handling file uploads
   async (req, res, next) => {
     try {
       console.log("Request body:", req.body);
       console.log("Request file:", req.file);
 
-      const result = await AddAboutUs(req);
+      const result = await updateBlog(req);
       res.status(200).json(result);
     } catch (error) {
-      console.error('Error processing request:', error);
       next(error);
     }
   }
 );
+
+
 
 module.exports = router;

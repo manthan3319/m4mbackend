@@ -1,7 +1,7 @@
 /*
  * @file: swagger-config.js
  * @description: It Contain swagger configrations.
- * @author: Sandip Vaghasiya
+ * @author: Manthan Vaghasiya
  */
 const swaggerJsDocs = require("swagger-jsdoc");
 
@@ -12,7 +12,7 @@ const swaggerOptions = {
       version: "1.0",
       description: "All api end points",
       contact: {
-        name: "Sandip Vaghasiya",
+        name: "Manthan Vaghasiya",
       },
       servers: ["http://localhost:3000"],
     },
