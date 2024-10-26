@@ -4,11 +4,15 @@ const ProductModel = require("./product");
 const ourCultureModel = require("./ourCulture");
 const blogModel = require("./blog");
 const aboutusModel = require("./aboutus");
+const chatboxqueModel = require("./chatboxque");
+const shopLocationModel = require("./shopLocations");
 module.exports = {
   contractorModel,
   CategoryModel,
   ProductModel,
   ourCultureModel,
   blogModel,
-  aboutusModel
+  aboutusModel,
+  chatboxqueModel,
+  shopLocationModel
 };

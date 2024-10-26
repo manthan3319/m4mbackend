@@ -578,14 +578,14 @@ const blogDelete = async (req, res) => {
 
 /*************************** AddAboutUs ***************************/
 const AddAboutUs = async (req) => {
-  const { content } = req.body;  // Content from the request body
-  const image = req.file;        // Image file from the request
+  const { content } = req.body; // Content from the request body
+  const image = req.file; // Image file from the request
 
   // Validate that both content and image are provided
   if (!content || !image) {
     return {
       success: false,
-      message: "All fields are required",  // Error message if fields are missing
+      message: "All fields are required", // Error message if fields are missing
     };
   }
 
@@ -593,21 +593,24 @@ const AddAboutUs = async (req) => {
     // Data to be saved
     const data = {
       content: content,
-      imageName: image.filename,  // Using the modified filename
+      imageName: image.filename, // Using the modified filename
     };
 
     // Save the data to the database (adjust your model as necessary)
-    const addAboutUsData = await dbService.createOneRecord("aboutusModel", data);
+    const addAboutUsData = await dbService.createOneRecord(
+      "aboutusModel",
+      data
+    );
 
     if (addAboutUsData) {
       return {
         success: true,
-        message: "About Us added successfully",  // Success message
+        message: "About Us added successfully", // Success message
       };
     } else {
       return {
         success: false,
-        message: "Failed to add About Us",  // Failure message
+        message: "Failed to add About Us", // Failure message
       };
     }
   } catch (error) {
@@ -639,18 +642,18 @@ const getDetails = async (req) => {
         blog: blogdata.length,
         category: categorydata.length,
         product: productdata.length,
-        culture: ourclutyre.length 
+        culture: ourclutyre.length,
       };
     } else {
       return {
-        message: "Details not found"
+        message: "Details not found",
       };
     }
   } catch (error) {
     console.error("Error fetching details:", error);
     return {
       message: "Error fetching details",
-      error: error.message
+      error: error.message,
     };
   }
 };
@@ -664,11 +667,12 @@ const getAboutus = async (req) => {
   try {
     let data = await dbService.findAllRecords("aboutusModel", where);
 
-    if (data.length > 0) {  // Check if there are records found
+    if (data.length > 0) {
+      // Check if there are records found
       return {
         success: true,
         message: "About us details fetched successfully",
-        data: data
+        data: data,
       };
     } else {
       return {
@@ -685,7 +689,7 @@ const getAboutus = async (req) => {
       message: "An error occurred while fetching About Us details.",
     };
   }
-}
+};
 
 /*************************** updateBlog ***************************/
 const updateBlog = async (req, res) => {
@@ -740,8 +744,288 @@ const updateBlog = async (req, res) => {
   }
 };
 
+/*************************** addChatBoxQue ***************************/
+const addChatBoxQue = async (req, res) => {
+  const { question, answers } = req.body;
+  console.log("addChatBoxQue", req.body);
+
+  try {
+    const data = {
+      question,
+      answers,
+    };
+
+    const addProductData = await dbService.createOneRecord(
+      "chatboxqueModel",
+      data
+    );
+
+    return {
+      success: true,
+      message: "Question and answers saved successfully!",
+      data: addProductData,
+    };
+  } catch (error) {
+    console.error("Error saving question:", error);
+    return {
+      success: false,
+      message: "Failed to save question and answers.",
+    };
+  }
+};
+
+/*************************** getChatBoxQueList ***************************/
+const getChatBoxQueList = async (req, res) => {
+  let where = {
+    isDeleted: false,
+  };
+
+  try {
+    let data = await dbService.findAllRecords("chatboxqueModel", where);
+
+    if (data && data.length > 0) {
+      return {
+        success: true,
+        data: data,
+        message: "chatbox question fetched successfully!",
+      };
+    } else {
+      return {
+        success: false,
+        message: "chatbox question found or all Blog are deleted.",
+      };
+    }
+  } catch (error) {
+    console.error("Error fetching Blog:", error);
+    return {
+      success: false,
+      message: "Error fetching Blog",
+      error: error.message,
+    };
+  }
+};
+
+/*************************** chatBoxQuestionDelete ***************************/
+const chatBoxQuestionDelete = async (req, res) => {
+  try {
+    console.log("chatBoxQuestionDelete", req.body);
+
+    let { chatboxId } = req.body;
+
+    if (!chatboxId) {
+      return {
+        messages: "Category ID is required",
+      };
+    }
+
+    let deleteData = await dbService.deleteOneRecord("chatboxqueModel", {
+      _id: chatboxId,
+    });
+
+    if (deleteData.deletedCount === 0) {
+      return {
+        messages: "chat box question not found",
+      };
+    }
+
+    return {
+      messages: "Chatbox question deleted successfully",
+    };
+  } catch (error) {
+    return {
+      messages: "An error occurred while deleting the category",
+    };
+  }
+};
+
+/*************************** AddShopLocation ***************************/
+const AddShopLocation = async (req) => {
+  const { name, description, address, number, mapsLink, mapsgallery } =
+    req.body;
+  const images = req.files["images"];
+  const video = req.files["video"] ? req.files["video"][0] : null;
+
+  // Check if all required fields are present
+  if (!name || !description || !address || !images || !number || !mapsLink) {
+    return {
+      message: "All fields are required",
+    };
+  }
+
+  try {
+    const imageNames = images.map((image) => image.filename);
+
+    const data = {
+      shopName: name,
+      description,
+      address,
+      number,
+      mapsLink,
+      mapsgallery,
+      imageNames,
+      videoName: video ? video.filename : null,
+      createDate: new Date(),
+    };
+
+    const addShopData = await dbService.createOneRecord(
+      "shopLocationModel",
+      data
+    );
+
+    if (addShopData) {
+      return {
+        message: "Shop location added successfully",
+      };
+    } else {
+      return {
+        message: "Failed to add shop location",
+      };
+    }
+  } catch (error) {
+    console.error("Error adding shop location:", error);
+    return {
+      message: "An error occurred while adding the shop location",
+    };
+  }
+};
+
+/*************************** getShopLocationList ***************************/
+const getShopLocationList = async (req, res) => {
+  let where = {
+    isDeleted: false,
+  };
+
+  try {
+    let data = await dbService.findAllRecords("shopLocationModel", where);
+
+    if (data && data.length > 0) {
+      return {
+        success: true,
+        data: data,
+        message: "shop location fetched successfully!",
+      };
+    } else {
+      return {
+        success: false,
+        message: "shop location found or all Blog are deleted.",
+      };
+    }
+  } catch (error) {
+    console.error("Error fetching Blog:", error);
+    return {
+      success: false,
+      message: "Error fetching Blog",
+      error: error.message,
+    };
+  }
+};
+
+/*************************** deleteShopLocation ***************************/
+const deleteShopLocation = async (req, res) => {
+  try {
+    let { shopid } = req.body;
+
+    // console.log("req.body", req.body)
+
+    if (!shopid) {
+      return {
+        messages: "shop ID is required",
+      };
+    }
+
+    let deleteData = await dbService.deleteOneRecord("shopLocationModel", {
+      _id: shopid,
+    });
+
+    if (deleteData.deletedCount === 0) {
+      return {
+        messages: "shop location not found",
+      };
+    }
+
+    return {
+      messages: "shop location deleted successfully",
+    };
+  } catch (error) {
+    return {
+      messages: "An error occurred while deleting the category",
+    };
+  }
+};
+
+/*************************** updateShopLocation ***************************/
+const updateShopLocation = async (req) => {
+  const { name, description, address, number, mapsLink, mapsgallery } = req.body;
+  const shopId = req.body.shopId;
+
+  if (!shopId) {
+    return { message: "Shop ID is required" };
+  }
+
+  try {
+    const shop = await dbService.findOneRecord("shopLocationModel", { _id: shopId });
+
+    // console.log("shop", shop);
+    // console.log("shopId", shopId);
+
+    if (!shop) {
+      return { message: "Shop not found" };
+    }
+
+    let imageNames = shop.imageNames || [];
+    let videoName = shop.videoName || null;
+
+    if (req.files && req.files.images) {
+      imageNames = req.files.images.map((file) => file.filename);
+    }
+
+    if (req.files && req.files.video) {
+      videoName = req.files.video[0].filename;
+    }
+
+    const updateData = {
+      shopName: name,
+      description,
+      address,
+      number: number, 
+      mapsLink,
+      mapsgallery,
+      imageNames,
+      videoName,
+    };
+
+    const updatedShop = await dbService.findOneAndUpdateRecord(
+      "shopLocationModel",
+      { _id: shopId },
+      updateData,
+      { new: true }
+    );
+
+    // console.log("updateData", updateData);
+    // console.log("updatedShop", updatedShop);
+
+    if (updatedShop) {
+      return { message: "Shop updated successfully", updatedShop }; 
+    } else {
+      return { message: "Failed to update shop" };
+    }
+  } catch (error) {
+    console.error("Error updating shop:", error);
+    return { message: "Error updating shop", error };
+  }
+};
+
+
+
 
 module.exports = {
+  updateShopLocation,
+  deleteShopLocation,
+  getShopLocationList,
+  AddShopLocation,
+  chatBoxQuestionDelete,
+  getChatBoxQueList,
+  addChatBoxQue,
   addContractor,
   adminLogin,
   AddCategory,
@@ -759,5 +1043,5 @@ module.exports = {
   blogDelete,
   AddAboutUs,
   getDetails,
-  getAboutus
+  getAboutus,
 };

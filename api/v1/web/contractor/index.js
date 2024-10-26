@@ -27,8 +27,22 @@ const AddAboutUs = require("./AddAboutUs");
 const getDetails = require("./getDetails");
 const getAboutus = require("./getAboutus");
 const updateBlog = require("./updateBlog");
+const addChatBoxQue = require("./addChatBoxQue");
+const getChatBoxQueList = require("./getChatBoxQueList");
+const chatBoxQuestionDelete = require("./chatBoxQuestionDelete");
+const AddShopLocation = require("./AddShopLocation");
+const getShopLocationList = require("./getShopLocationList");
+const deleteShopLocation = require("./deleteShopLocation");
+const updateShopLocation = require("./updateShopLocation");
 
 module.exports = [
+  deleteShopLocation,
+  updateShopLocation,
+  getShopLocationList,
+  AddShopLocation,
+  chatBoxQuestionDelete,
+  getChatBoxQueList,
+  addChatBoxQue,
   updateBlog,
   save,
   list,
