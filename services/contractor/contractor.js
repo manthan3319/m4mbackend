@@ -578,25 +578,22 @@ const blogDelete = async (req, res) => {
 
 /*************************** AddAboutUs ***************************/
 const AddAboutUs = async (req) => {
-  const { content } = req.body; // Content from the request body
-  const image = req.file; // Image file from the request
+  const { content } = req.body;
+  const image = req.file;
 
-  // Validate that both content and image are provided
   if (!content || !image) {
     return {
       success: false,
-      message: "All fields are required", // Error message if fields are missing
+      message: "All fields are required",
     };
   }
 
   try {
-    // Data to be saved
     const data = {
       content: content,
-      imageName: image.filename, // Using the modified filename
+      imageName: image.filename,
     };
 
-    // Save the data to the database (adjust your model as necessary)
     const addAboutUsData = await dbService.createOneRecord(
       "aboutusModel",
       data
@@ -605,12 +602,12 @@ const AddAboutUs = async (req) => {
     if (addAboutUsData) {
       return {
         success: true,
-        message: "About Us added successfully", // Success message
+        message: "About Us added successfully",
       };
     } else {
       return {
         success: false,
-        message: "Failed to add About Us", // Failure message
+        message: "Failed to add About Us",
       };
     }
   } catch (error) {
@@ -955,7 +952,8 @@ const deleteShopLocation = async (req, res) => {
 
 /*************************** updateShopLocation ***************************/
 const updateShopLocation = async (req) => {
-  const { name, description, address, number, mapsLink, mapsgallery } = req.body;
+  const { name, description, address, number, mapsLink, mapsgallery } =
+    req.body;
   const shopId = req.body.shopId;
 
   if (!shopId) {
@@ -963,7 +961,9 @@ const updateShopLocation = async (req) => {
   }
 
   try {
-    const shop = await dbService.findOneRecord("shopLocationModel", { _id: shopId });
+    const shop = await dbService.findOneRecord("shopLocationModel", {
+      _id: shopId,
+    });
 
     // console.log("shop", shop);
     // console.log("shopId", shopId);
@@ -987,7 +987,7 @@ const updateShopLocation = async (req) => {
       shopName: name,
       description,
       address,
-      number: number, 
+      number: number,
       mapsLink,
       mapsgallery,
       imageNames,
@@ -1005,7 +1005,7 @@ const updateShopLocation = async (req) => {
     // console.log("updatedShop", updatedShop);
 
     if (updatedShop) {
-      return { message: "Shop updated successfully", updatedShop }; 
+      return { message: "Shop updated successfully", updatedShop };
     } else {
       return { message: "Failed to update shop" };
     }
@@ -1015,10 +1015,119 @@ const updateShopLocation = async (req) => {
   }
 };
 
+/*************************** updateAboutUS ***************************/
+const updateAboutUs = async (req) => {
+  const { content, categoryId } = req.body;
+  console.log("helllllllll",req.body);
+  if (!categoryId) {
+    return { message: "Category ID is required" };
+  }
 
+  try {
+    const category = await dbService.findOneRecord("aboutusModel", {
+      _id: categoryId,
+    });
+    if (!category) {
+      return { message: "Category not found" };
+    }
+
+    let imageName = category.imageName;
+    if (req.file) {
+      imageName = req.file.originalname;
+    }
+
+    const updateData = {
+      content,
+      imageName,
+    };
+
+    const updatedCategory = await dbService.findOneAndUpdateRecord(
+      "aboutusModel",
+      { _id: categoryId },
+      updateData,
+      { new: true }
+    );
+
+    return updatedCategory
+      ? { message: "Category updated successfully" }
+      : { message: "Category not updated successfully" };
+  } catch (error) {
+    console.error("Error updating category:", error);
+    return { message: "An error occurred" };
+  }
+};
+
+/*************************** updateContact ***************************/
+const updateContact = async (req) => {
+  const { role, name, contact, address } = req.body;
+  console.log(req.body);
+
+  try {
+    // Check if the contact already exists
+    let existingContact = await dbService.findOneRecord("ContactDetailsModel", { role });
+
+    if (existingContact) {
+      // If contact exists, update the details
+      existingContact.name = name;
+      existingContact.contact = contact;
+      existingContact.address = address;
+      existingContact.updatedAt = Date.now();
+
+      await dbService.updateManyRecords("ContactDetailsModel", { role }, existingContact);
+
+      return { message: 'Contact updated successfully', status: 'success' };
+    } else {
+      const newContact = { role, name, contact, address };
+
+      await dbService.createOneRecord("ContactDetailsModel", newContact);
+
+      return { message: 'New contact created successfully', status: 'success' };
+    }
+  } catch (error) {
+    console.error('Error updating contact:', error);
+    throw new Error('Error in updating contact');
+  }
+};
+
+/*************************** getContactDetails ***************************/
+const getContactDetails = async (req) => {
+  let where = {
+    isDeleted: { $ne: true }, 
+  };
+
+  try {
+ 
+    let data = await dbService.findAllRecords("ContactDetailsModel", where);
+  
+    
+    if (data && data.length > 0) {
+      return {
+        success: true,
+        data: data,
+        message: "ContactDetails data fetched successfully!",
+      };
+    } else {
+      return {
+        success: false,
+        message: "No ContactDetails found or all categories are deleted.",
+      };
+    }
+  } catch (error) {
+    console.error("Error fetching contact details:", error);
+    return {
+      success: false,
+      message: "Error fetching contact details",
+      error: error.message,
+    };
+  }
+};
 
 
 module.exports = {
+  getContactDetails,
+  updateAboutUs,
+  updateBlog,
+  updateContact,
   updateShopLocation,
   deleteShopLocation,
   getShopLocationList,

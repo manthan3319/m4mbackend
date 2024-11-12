@@ -6,6 +6,8 @@ const blogModel = require("./blog");
 const aboutusModel = require("./aboutus");
 const chatboxqueModel = require("./chatboxque");
 const shopLocationModel = require("./shopLocations");
+const ContactDetailsModel = require("./contactDetails");
+
 module.exports = {
   contractorModel,
   CategoryModel,
@@ -14,5 +16,6 @@ module.exports = {
   blogModel,
   aboutusModel,
   chatboxqueModel,
-  shopLocationModel
+  shopLocationModel,
+  ContactDetailsModel
 };

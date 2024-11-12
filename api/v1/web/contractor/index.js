@@ -34,8 +34,14 @@ const AddShopLocation = require("./AddShopLocation");
 const getShopLocationList = require("./getShopLocationList");
 const deleteShopLocation = require("./deleteShopLocation");
 const updateShopLocation = require("./updateShopLocation");
+const updateAboutUs = require("./updateAboutUs");
+const updateContact = require("./updateContact");
+const getContactDetails = require("./getContactDetails");
 
 module.exports = [
+  updateAboutUs,
+  updateContact,
+  getContactDetails,
   deleteShopLocation,
   updateShopLocation,
   getShopLocationList,
